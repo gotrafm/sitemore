@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gotra FM</title>
+    
+    <link rel="apple-touch-icon" href="https://i.ibb.co/pqF8BqC/37761365-226-F-45-C7-BF7-B-62-EC604-E68-B6.jpg">
+    <meta name="apple-mobile-web-app-title" content="gotra FM">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700;900&display=swap');
+
+        :root {
+            --bg: #0a0a0a;
+            --card: rgba(17, 17, 17, 0.85);
+            --accent: #ff1a1a;
+            --gold: #d4af37;
+            --text: #cccccc;
+            --white: #ffffff;
+            --border: #222222;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #000;
+            background-image:
+                linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                url('https://i.ibb.co/pqF8BqC/37761365-226-F-45-C7-BF7-B-62-EC604-E68-B6.jpg');
+            background-size: contain;
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: var(--text);
+            font-family: 'Oswald', 'Arial Black', Impact, sans-serif;
+            min-height: 100vh;
+            padding: 0 0 100px 0;
+            letter-spacing: 0.5px;
+        }
+
+        /* На телефоне — заполняем экран */
+        @media (max-width: 768px) {
+            body {
+                background-size: cover;
+                background-position: center top;
+            }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 26, 26, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(212, 175, 55, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2rem 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 50%;
+            transform: translateX(-50%);
+            width: 200px; height: 2px;
+            background: var(--accent);
+        }
+        .header-center {
+            text-align: center;
+            flex: 1;
+        }
+        .header-center h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--white);
+            text-transform: lowercase;
+            letter-spacing: 6px;
+            line-height: 1;
+        }
+        .header-center .sub {
+            color: var(--gold);
+            font-size: 0.9rem;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-top: 0.3rem;
+            font-weight: 500;
+        }
+
+        .social-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            flex-shrink: 0;
+        }
+        .social-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid #333;
+            background: rgba(17, 17, 17, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.2s;
+            overflow: hidden;
+        }
+        .social-btn:hover {
+            border-color: var(--accent);
+        }
+        .social-btn img {
+            width: 17px;
+            height: 17px;
+            object-fit: contain;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .album-section {
+            margin-bottom: 3rem;
+        }
+        .album-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .album-cover {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid #333;
+        }
+        .album-icon {
+            font-size: 2.5rem;
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .album-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            line-height: 1;
+        }
+        .album-subtitle {
+            color: #555;
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .track-card {
+            background: var(--card);
+            backdrop-filter: blur(5px);
+            border-left: 3px solid transparent;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.2s;
+            clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%);
+        }
+        .track-card:hover {
+            border-left-color: var(--accent);
+            background: rgba(24, 24, 24, 0.9);
+        }
+        .track-num {
+            color: var(--accent);
+            font-weight: 900;
+            font-size: 1.1rem;
+            min-width: 24px;
+            text-align: center;
+            opacity: 0.6;
+        }
+        .track-info { flex: 1; min-width: 100px; }
+        .track-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .track-artist {
+            color: #666;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            margin-top: 2px;
+            text-transform: lowercase;
+        }
+        .track-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .btn {
+            background: transparent;
+            border: 1px solid #333;
+            color: #999;
+            padding: 0.3rem 0.8rem;
+            cursor: pointer;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn:hover {
+            border-color: var(--accent);
+            color: #fff;
+        }
+        .btn-play {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+            min-width: 36px;
+            text-align: center;
+        }
+        .btn-play:hover { background: #cc0000; }
+        .btn-play.playing {
+            background: #000;
+            border-color: var(--gold);
+            color: var(--gold);
+            animation: glow 1.5s infinite;
+        }
+        @keyframes glow {
+            0%,100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.7); }
+        }
+
+        .player-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.97);
+            backdrop-filter: blur(15px);
+            border-top: 2px solid var(--accent);
+            padding: 0.7rem 1rem;
+            z-index: 200;
+            display: none;
+        }
+        .player-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .player-prev, .player-next {
+            background: transparent;
+            border: 1px solid #333;
+            color: #999;
+            min-width: 32px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .player-prev:hover, .player-next:hover {
+            border-color: var(--accent);
+            color: #fff;
+        }
+        .player-play {
+            background: var(--accent);
+            border: none;
+            color: #fff;
+            min-width: 38px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            font-size: 1rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            font-family: 'Oswald', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .player-info { flex: 1; min-width: 0; }
+        .player-info .np-title {
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .player-info .np-artist {
+            color: #666;
+            font-size: 0.65rem;
+            letter-spacing: 1px;
+            text-transform: lowercase;
+        }
+        .player-slider-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2px;
+        }
+        .player-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 3px;
+            background: #333;
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+        }
+        .player-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+        .player-time {
+            color: #555;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+            min-width: 55px;
+            text-align: right;
+        }
+
+        @media (max-width: 500px) {
+            .header { padding: 1.5rem 1rem 1rem; }
+            .header-center h1 { font-size: 2.5rem; letter-spacing: 3px; }
+            .album-title { font-size: 1.3rem; letter-spacing: 1px; }
+            .track-card { flex-wrap: wrap; gap: 0.5rem; }
+            .track-actions { width: 100%; }
+            .player-row { gap: 0.3rem; }
+            .social-btn { width: 28px; height: 28px; }
+            .social-btn img { width: 15px; height: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-center">
+            <h1>gotra</h1>
+            <p class="sub">● fm ●</p>
+        </div>
+        <div class="social-bar">
+            <a href="https://t.me/alex_gotra" target="_blank" class="social-btn" title="Telegram">
+                <img src="https://raw.githubusercontent.com/gotrafm/2sitesingles/main/TG.webp" alt="Telegram">
+            </a>
+            <a href="https://www.instagram.com/alex_gotra?igsh=MThlczhhMzdwZTc3Zw%3D%3D&utm_source=qr" target="_blank" class="social-btn" title="Instagram">
+                <img src="https://raw.githubusercontent.com/gotrafm/2sitesingles/main/Instagram_logo_2022.svg.webp" alt="Instagram">
+            </a>
+            <a href="https://vk.ru/gotraa" target="_blank" class="social-btn" title="ВКонтакте">
+                <img src="https://raw.githubusercontent.com/gotrafm/2sitesingles/main/vk-logo-icon-vk-app-transparent-background-free-png.webp" alt="ВКонтакте">
+            </a>
+        </div>
+    </header>
+
+    <div class="container" id="track-container"></div>
+
+    <div class="player-bar" id="player-bar">
+        <div class="player-row">
+            <button class="player-prev" id="player-prev">⏮</button>
+            <button class="player-play" id="player-play">▶</button>
+            <button class="player-next" id="player-next">⏭</button>
+            <div class="player-info">
+                <div class="np-title" id="np-title">—</div>
+                <div class="np-artist" id="np-artist">—</div>
+                <div class="player-slider-wrap">
+                    <input type="range" class="player-slider" id="player-slider" value="0" min="0" max="1000" step="1">
+                    <span class="player-time" id="player-time">0:00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audio" preload="auto"></audio>
+
+    <script>
+        const tracks = [
+            { title: 'WAVES', artist: 'gotra', album: '8 НОТА', file: 'https://raw.githubusercontent.com/gotrafm/2site/main/gotra%20-%20WAVES.mp3' },
+            { title: 'STAY', artist: 'gotra', album: '8 НОТА', file: 'https://raw.githubusercontent.com/gotrafm/2site/main/gotra%20-%20STAY.mp3' },
+            { title: 'CINEMA', artist: 'gotra', album: '8 НОТА', file: 'https://raw.githubusercontent.com/gotrafm/2site/main/gotra%20-%20CINEMA.mp3' },
+            { title: 'WISH (Dodukalov prod.)', artist: 'gotra', album: '8 НОТА', file: 'https://raw.githubusercontent.com/gotrafm/2site/main/gotra%20-%20WISH%20(Dodukalov%20prod.).mp3' },
+            { title: 'AMONG', artist: 'gotra', album: '8 НОТА', file: 'https://raw.githubusercontent.com/gotrafm/2site/main/gotra%20-%20AMONG.mp3' },
+            { title: 'MY HIMALAYAN (Dodukalov prod.)', artist: 'gotra', album: '8 НОТА', file: 'https://raw.githubusercontent.com/gotrafm/2site/main/gotra%20-%20MY%20HIMALAYAN%20(Dodukalov%20prod.).mp3' },
+            { title: 'HARIOM', artist: 'gotra', album: '8 НОТА', file: 'https://raw.githubusercontent.com/gotrafm/2site/main/gotra%20-%20HARIOM.mp3' },
+            { title: 'DROP', artist: 'gotra', album: '8 НОТА', file: 'https://raw.githubusercontent.com/gotrafm/2site/main/gotra%20-%20DROP.mp3' },
+            { title: 'LOVE', artist: 'gotra', album: '8 НОТА', file: 'https://raw.githubusercontent.com/gotrafm/2site/main/gotra%20-%20LOVE.mp3' },
+            { title: 'LADY', artist: 'gotra', album: '8 НОТА', file: 'https://raw.githubusercontent.com/gotrafm/2site/main/gotra%20-%20LADY.mp3' },
+            { title: 'RADHE (feelllove music)', artist: 'gotra', album: '8 НОТА', file: 'https://raw.githubusercontent.com/gotrafm/2site/main/gotra%20-%20RADHE%20(music_%20feellove).mp3' },
+            { title: 'SKY', artist: 'gotra', album: 'СИНГЛЫ', file: 'https://raw.githubusercontent.com/gotrafm/2sitesingles/main/gotra%20-%20SKY.mp3' },
+            { title: 'JORNEY', artist: 'gotra feat. Dodukalov', album: 'СИНГЛЫ', file: 'https://raw.githubusercontent.com/gotrafm/2sitesingles/main/gotra%20feat.%20Dodukalov%20-%20JORNEY.mp3' },
+            { title: 'SEARCH', artist: 'gotra', album: 'СИНГЛЫ', file: 'https://raw.githubusercontent.com/gotrafm/2sitesingles/main/gotra%20-%20SEARCH.mp3' },
+            { title: 'MY FIRE', artist: 'GT, gotra', album: 'СИНГЛЫ', file: 'https://raw.githubusercontent.com/gotrafm/2sitesingles/main/GT%2C%20gotra%20-%20MY%20FIRE.mp3' },
+            { title: 'NUMEROLOGIA', artist: 'gotra', album: 'СИНГЛЫ', file: 'https://raw.githubusercontent.com/gotrafm/2sitesingles/main/gotra%20-%20NUMEROLOGIA.mp3' },
+            { title: 'FOLLOW', artist: 'gotra', album: 'СИНГЛЫ', file: 'https://raw.githubusercontent.com/gotrafm/2sitesingles/main/gotra%20-%20FOLLOW.mp3' },
+            { title: 'BRAMAN', artist: 'gotra', album: 'СИНГЛЫ', file: 'https://raw.githubusercontent.com/gotrafm/2sitesingles/main/gotra%20-%20BRAMAN.mp3' },
+            { title: 'FOR GOD', artist: 'gotra', album: 'СИНГЛЫ', file: 'https://raw.githubusercontent.com/gotrafm/2sitesingles/main/gotra%20-%20FOR%20GOD.mp3' },
+            { title: 'WAKE UP!', artist: 'gotra', album: 'СИНГЛЫ', file: 'https://raw.githubusercontent.com/gotrafm/2sitesingles/main/gotra%20-%20WAKE%20UP!.mp3' },
+            { title: 'CHILDREN OF KALI (AUM RAA Prod.)', artist: 'gotra', album: 'СИНГЛЫ', file: 'https://raw.githubusercontent.com/gotrafm/2sitesingles/main/gotra%20-%20CHILDREN%20OF%20KALI%20(AUM%20RAA%20instr.).mp3' },
+            { title: 'YOUNG', artist: 'gotra', album: 'СИНГЛЫ', file: 'https://raw.githubusercontent.com/gotrafm/2sitesingles/main/gotra%20-%20YOUNG.mp3' },
+            { title: 'LIFE', artist: 'gotra', album: 'СИНГЛЫ', file: 'https://raw.githubusercontent.com/gotrafm/2sitesingles/main/gotra%20-%20LIFE.mp3' },
+            { title: 'MICROBS', artist: 'gotra', album: 'СИНГЛЫ', file: 'https://raw.githubusercontent.com/gotrafm/2sitesingles/main/gotra%20-%20MICROBS.mp3' },
+            { title: 'SLEEP', artist: 'gotra', album: 'СИНГЛЫ', file: 'https://raw.githubusercontent.com/gotrafm/2sitesingles/main/gotra%20-%20SLEEP.mp3' },
+        ];
+
+        const albumCovers = {
+            '8 НОТА': 'https://raw.githubusercontent.com/gotrafm/2sitesingles/main/MIXTAPE.jpg'
+        };
+
+        const container = document.getElementById('track-container');
+        const audio = document.getElementById('audio');
+        const playerBar = document.getElementById('player-bar');
+        const playerPrev = document.getElementById('player-prev');
+        const playerPlay = document.getElementById('player-play');
+        const playerNext = document.getElementById('player-next');
+        const npTitle = document.getElementById('np-title');
+        const npArtist = document.getElementById('np-artist');
+        const playerSlider = document.getElementById('player-slider');
+        const playerTime = document.getElementById('player-time');
+
+        let currentIndex = null;
+        let allTrackElements = [];
+        let isDragging = false;
+
+        function updateMediaSession(idx) {
+            if (!('mediaSession' in navigator)) return;
+            const t = tracks[idx];
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: t.title,
+                artist: t.artist,
+                album: t.album,
+                artwork: [{ src: 'https://i.ibb.co/pqF8BqC/37761365-226-F-45-C7-BF7-B-62-EC604-E68-B6.jpg', sizes: '512x512', type: 'image/jpeg' }]
+            });
+        }
+
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.setActionHandler('previoustrack', () => { if (currentIndex !== null) { let prev = currentIndex - 1; while (prev >= 0 && !tracks[prev].file) prev--; if (prev < 0) prev = tracks.length - 1; play(prev); } });
+            navigator.mediaSession.setActionHandler('nexttrack', () => { if (currentIndex !== null) { let next = currentIndex + 1; while (next < tracks.length && !tracks[next].file) next++; if (next >= tracks.length) next = 0; play(next); } });
+            navigator.mediaSession.setActionHandler('play', () => audio.play());
+            navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+            navigator.mediaSession.setActionHandler('seekforward', null);
+            navigator.mediaSession.setActionHandler('seekbackward', null);
+        }
+
+        function renderAll(trackList) {
+            container.innerHTML = '';
+            allTrackElements = [];
+            const albumOrder = ['8 НОТА', 'СИНГЛЫ'];
+            const albumIcons = { '8 НОТА': '💿', 'СИНГЛЫ': '🎵' };
+            const albumSubtitles = { '8 НОТА': 'mixtape', 'СИНГЛЫ': 'singles' };
+
+            albumOrder.forEach(albumName => {
+                const albumTracks = trackList.filter(t => t.album === albumName);
+                if (albumTracks.length === 0) return;
+                const albumSec = document.createElement('div');
+                albumSec.className = 'album-section';
+                let headerIcon = albumCovers[albumName] ? `<img src="${albumCovers[albumName]}" class="album-cover" alt="${albumName}">` : `<div class="album-icon">${albumIcons[albumName] || '🎧'}</div>`;
+                albumSec.innerHTML = `<div class="album-header">${headerIcon}<div><div class="album-title">${albumName}</div><div class="album-subtitle">${albumSubtitles[albumName] || ''}</div></div></div>`;
+
+                albumTracks.forEach((t, i) => {
+                    const gi = allTrackElements.length;
+                    const card = document.createElement('div');
+                    card.className = 'track-card';
+                    const has = t.file && t.file.trim();
+                    card.innerHTML = `<div class="track-num">${i+1}</div><div class="track-info"><div class="track-title">${esc(t.title)}</div><div class="track-artist">${esc(t.artist)}</div></div><div class="track-actions">${has ? `<button class="btn btn-play" data-index="${gi}">▶</button>` : ''}${has ? `<a class="btn" href="${esc(t.file)}" download>↓</a>` : ''}</div>`;
+                    albumSec.appendChild(card);
+                    allTrackElements.push({ card, track: t, btn: null });
+                });
+                container.appendChild(albumSec);
+            });
+
+            allTrackElements.forEach((it, i) => { const b = it.card.querySelector('.btn-play'); it.btn = b; if (b) b.addEventListener('click', () => play(i)); });
+        }
+
+        function play(idx) {
+            const { track, btn } = allTrackElements[idx];
+            document.querySelectorAll('.btn-play').forEach(b => { b.classList.remove('playing'); b.textContent = '▶'; });
+            if (currentIndex === idx && !audio.paused) { audio.pause(); return; }
+            audio.src = track.file; audio.load(); audio.play().catch(() => {});
+            if (btn) { btn.classList.add('playing'); btn.textContent = '■'; }
+            npTitle.textContent = track.title; npArtist.textContent = track.artist;
+            playerPlay.textContent = '⏸'; playerBar.style.display = 'block';
+            currentIndex = idx; updateMediaSession(idx);
+        }
+
+        function playPrev() { if (currentIndex === null) return; let prev = currentIndex - 1; while (prev >= 0 && !tracks[prev].file) prev--; if (prev < 0) prev = tracks.length - 1; play(prev); }
+        function playNext() { if (currentIndex === null) return; let next = currentIndex + 1; while (next < tracks.length && !tracks[next].file) next++; if (next >= tracks.length) next = 0; play(next); }
+
+        playerPrev.addEventListener('click', playPrev);
+        playerNext.addEventListener('click', playNext);
+        playerPlay.addEventListener('click', () => { if (audio.paused) { audio.play(); } else { audio.pause(); } });
+        playerSlider.addEventListener('input', () => { isDragging = true; if (audio.duration) audio.currentTime = (playerSlider.value / 1000) * audio.duration; });
+        playerSlider.addEventListener('change', () => { isDragging = false; });
+        audio.addEventListener('timeupdate', () => { if (!isDragging && audio.duration) { playerSlider.value = (audio.currentTime / audio.duration) * 1000; playerTime.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration); } });
+        audio.addEventListener('loadedmetadata', () => { playerSlider.value = 0; playerTime.textContent = '0:00 / ' + formatTime(audio.duration); });
+        audio.addEventListener('ended', () => playNext());
+        audio.addEventListener('pause', () => { playerPlay.textContent = '▶'; if (currentIndex !== null && allTrackElements[currentIndex]) { const b = allTrackElements[currentIndex].btn; if (b) { b.classList.remove('playing'); b.textContent = '▶'; } } });
+        audio.addEventListener('play', () => { playerPlay.textContent = '⏸'; if (currentIndex !== null && allTrackElements[currentIndex]) { const b = allTrackElements[currentIndex].btn; if (b) { b.classList.add('playing'); b.textContent = '■'; } } });
+
+        function formatTime(sec) { if (isNaN(sec)) return '0:00'; const m = Math.floor(sec / 60); const s = Math.floor(sec % 60); return m + ':' + (s < 10 ? '0' : '') + s; }
+        function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+        renderAll(tracks);
+    </script>
+</body>
+</html>
